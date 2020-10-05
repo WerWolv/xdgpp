@@ -1,0 +1,18 @@
+CXX?=g++
+CXXFLAGS?=
+STDDEFS=-std=c++17 -Werror
+CXXFLAGS+=$(STDDEFS)
+CATCH2_CXXFLAGS=-DCATCH_CONFIG_MAIN -DCATCH_CONFIG_FAST_COMPILE
+CXXFLAGS+=$(CATCH2_CXXFLAGS)
+INCLUDES:=-I.
+NAME:=xdg_test
+
+SOURCES=xdg_test.cpp
+OBJ=$(SOURCES:.cpp=.o)
+
+xdg_test: $(OBJ)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o $(NAME)
+
+.PHONY: clean
+clean:
+	rm -f $(OBJ) $(NAME)
