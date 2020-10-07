@@ -97,4 +97,41 @@ TEST_CASE("xdg::Dirs") {
         TestSingleDirectory(&xdg::BaseDirectories::CacheHome, "XDG_CACHE_HOME",
                             std::filesystem::path{getenv("HOME")} / ".cache");
     }
+
+    SECTION("XDG_RUNTIME_DIR") {
+        std::filesystem::path new_dir{std::filesystem::current_path()};
+        new_dir /= "runtime_dir";
+        if (std::filesystem::exists(new_dir)) {
+            // Clean up previous tests
+            std::filesystem::remove(new_dir);
+        }
+        setenv("XDG_RUNTIME_DIR", new_dir.c_str(), 1);
+        CHECK_THROWS_AS(xdg::BaseDirectories{}, xdg::BaseDirectoryException);
+
+        // Create directory
+        std::filesystem::create_directory(new_dir);
+        // Apply 0777 mode
+        std::filesystem::permissions(new_dir,
+                                     std::filesystem::perms::owner_all |
+                                         std::filesystem::perms::group_all
+
+                                         | std::filesystem::perms::others_all,
+                                     std::filesystem::perm_options::add);
+        REQUIRE_THROWS_AS(xdg::BaseDirectories{}, xdg::BaseDirectoryException);
+
+        // Remove group_all and other_all, so that permissions will be 0700
+        std::filesystem::permissions(new_dir,
+                                     std::filesystem::perms::group_all
+
+                                         | std::filesystem::perms::others_all,
+                                     std::filesystem::perm_options::remove);
+
+        xdg::BaseDirectories *dirs = nullptr;
+        REQUIRE_NOTHROW(dirs = new xdg::BaseDirectories{});
+        REQUIRE(dirs->Runtime());
+        CHECK(dirs->Runtime().value() == new_dir);
+
+        std::filesystem::remove(new_dir);
+        delete dirs;
+    }
 }
