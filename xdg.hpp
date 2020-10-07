@@ -111,11 +111,13 @@ private:
                     std::filesystem::status(runtime_dir).permissions();
                 using perms = std::filesystem::perms;
                 // Check XDG_RUNTIME_DIR permissions are 0700
-                if (((runtime_dir_perms & perms::owner_all) != perms::none) ||
-                    ((runtime_dir_perms & perms::group_all) == perms::none) ||
-                    ((runtime_dir_perms & perms::others_all) == perms::none)) {
-                    runtime_.emplace(runtime_dir);
+                if (((runtime_dir_perms & perms::owner_all) == perms::none) ||
+                    ((runtime_dir_perms & perms::group_all) != perms::none) ||
+                    ((runtime_dir_perms & perms::others_all) != perms::none)) {
+                    throw BaseDirectoryException(
+                        "$XDG_RUNTIME_DIR must have 0700 as permissions");
                 }
+                runtime_.emplace(runtime_dir);
             }
         }
     }
