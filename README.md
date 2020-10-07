@@ -1,5 +1,8 @@
 # xdgpp
 
+[![builds.sr.ht status](https://builds.sr.ht/~danyspin97/xdgpp.svg)](https://builds.sr.ht/~danyspin97/xdgpp?)
+![Liberapay receiving](https://img.shields.io/liberapay/receives/danyspin97?logo=liberapay)
+
 C++17 header-only implementation of the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 
 ## Installation
