@@ -28,12 +28,12 @@
 
 template <typename T>
 void TestSingleDirectory(T function, const char *env_name,
-                         std::filesystem::path default_path) {
+                         const std::filesystem::path &default_path) {
     unsetenv(env_name);
     xdg::BaseDirectories dirs;
     CHECK(std::bind(function, &dirs)() == default_path);
 
-    auto new_env = "/tmp/mydir";
+    const auto *new_env = "/tmp/mydir";
     setenv(env_name, new_env, 1);
     dirs = xdg::BaseDirectories{};
     CHECK(std::bind(function, &dirs)() == std::filesystem::path{new_env});
@@ -44,13 +44,14 @@ void TestSingleDirectory(T function, const char *env_name,
 }
 
 template <typename T>
-void TestMultipleDirectories(T function, const char *env_name,
-                             std::vector<std::filesystem::path> default_paths) {
+void TestMultipleDirectories(
+    T function, const char *env_name,
+    const std::vector<std::filesystem::path> &default_paths) {
     unsetenv(env_name);
     xdg::BaseDirectories dirs;
     CHECK(std::bind(function, &dirs)() == default_paths);
 
-    auto new_env = "/tmp/mydir:/tmp/mydir2";
+    const auto *new_env = "/tmp/mydir:/tmp/mydir2";
     setenv(env_name, new_env, 1);
     dirs = xdg::BaseDirectories{};
     auto paths =
