@@ -122,8 +122,9 @@ private:
         }
     }
 
-    static auto GetAbsolutePathFromEnvOrDefault(const char *env_name,
-                                         std::filesystem::path &&default_path)
+    static auto
+    GetAbsolutePathFromEnvOrDefault(const char *env_name,
+                                    std::filesystem::path &&default_path)
         -> std::filesystem::path {
         const char *env_var = getenv(env_name);
         if (env_var == nullptr) {
@@ -196,10 +197,12 @@ private:
 [[nodiscard]] inline auto ConfigHomeDir() -> const std::filesystem::path & {
     return BaseDirectories::GetInstance().ConfigHome();
 }
-[[nodiscard]] inline auto DataDirs() -> const std::vector<std::filesystem::path> & {
+[[nodiscard]] inline auto DataDirs()
+    -> const std::vector<std::filesystem::path> & {
     return BaseDirectories::GetInstance().Data();
 }
-[[nodiscard]] inline auto ConfigDirs() -> const std::vector<std::filesystem::path> & {
+[[nodiscard]] inline auto ConfigDirs()
+    -> const std::vector<std::filesystem::path> & {
     return BaseDirectories::GetInstance().Config();
 }
 [[nodiscard]] inline auto CacheHomeDir() -> const std::filesystem::path & {
